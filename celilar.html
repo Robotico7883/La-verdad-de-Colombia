@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz sobre Colombia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #f9f9f9;
+        }
+        .quiz-container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .options label {
+            display: block;
+            margin: 8px 0;
+            font-size: 0.95em;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container" id="quiz-container"></div>
+    <button onclick="calcularPuntaje()">Enviar Respuestas</button>
+    <div class="result" id="result"></div>
+
+    <script>
+        const preguntas = [
+            // Lista completa de preguntas como en tu código original.
+        ];
+
+        function mostrarQuiz() {
+            const quizContainer = document.getElementById("quiz-container");
+            preguntas.forEach((q, index) => {
+                const preguntaDiv = document.createElement("div");
+                preguntaDiv.classList.add("pregunta");
+                preguntaDiv.innerHTML = `
+                    <p class="question">${q.pregunta}</p>
+                    <div class="options">
+                        ${q.opciones.map((opcion, i) => `
+                            <label>
+                                <input type="radio" name="pregunta${index}" value="${String.fromCharCode(97 + i)}">
+                                ${opcion}
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+                quizContainer.appendChild(preguntaDiv);
+            });
+        }
+
+        function calcularPuntaje() {
+            let puntaje = 0;
+            let resultadoHTML = '';
+            preguntas.forEach((q, index) => {
+                const respuestas = document.getElementsByName(`pregunta${index}`);
+                let respuestaSeleccionada = '';
+                respuestas.forEach((respuesta) => {
+                    if (respuesta.checked) {
+                        respuestaSeleccionada = respuesta.value;
+                    }
+                });
+
+                if (respuestaSeleccionada === q.respuestaCorrecta) {
+                    puntaje++;
+                    resultadoHTML += `<p>Pregunta ${index + 1}: ¡Correcto!</p>`;
+                } else {
+                    resultadoHTML += `<p>Pregunta ${index + 1}: Incorrecto. La respuesta correcta es ${q.respuestaCorrecta}. ${q.explicacion}</p>`;
+                }
+            });
+
+            const resultContainer = document.getElementById("result");
+            resultContainer.innerHTML = `<p>Tu puntaje es ${puntaje} de ${preguntas.length}</p>` + resultadoHTML;
+        }
+
+        mostrarQuiz();
+    </script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Prejuicios sobre Colombia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #FDE74C;
+        }
+        .quiz-container {
+            background-color: #FFFFFF;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+            border-left: 12px solid #EF233C;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+            font-size: 1.1em;
+        }
+        .question {
+            font-weight: bold;
+            font-size: 1.5em;
+            color: #023E8A;
+        }
+        .options label {
+            display: block;
+            margin: 12px 0;
+            color: #03071E;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .next-button {
+            background-color: #EF233C;
+            color: #FFFFFF;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .next-button:hover {
+            background-color: #d90429;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #023E8A;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quiz de Prejuicios sobre Colombia</h1>
+    <div class="quiz-container" id="quiz-container"></div>
+    <div class="button-container">
+        <button id="next-button" class="next-button" onclick="manejarBoton()" disabled>Siguiente</button>
+    </div>
+    <div class="result" id="result"></div>
+
+    <script>
+        const preguntas = [
+    {
+        question: "¿Qué medida ha tomado Colombia para mejorar la seguridad?",
+        options: [
+            "A) No ha tomado ninguna medida relevante.",
+            "B) Ha mejorado significativamente en varias regiones, aunque persisten desafíos en algunas áreas.",
+            "C) Ha implementado restricciones severas en todo el país.",
+            "D) La seguridad es un tema secundario en Colombia."
+        ],
+        correct: "b",
+        explanation: "A pesar de su historia de violencia, muchas regiones en Colombia han mejorado significativamente en seguridad. Esto ha sido posible gracias a esfuerzos locales y nacionales, aunque algunos lugares aún enfrentan retos importantes."
+    },
+    {
+        question: "¿Qué representa la cumbia y el vallenato en Colombia?",
+        options: [
+            "A) Son géneros musicales autóctonos con reconocimiento internacional.",
+            "B) Géneros que han perdido relevancia en la actualidad.",
+            "C) Música tradicional que solo se escucha en áreas rurales.",
+            "D) Estilos extranjeros adaptados a la cultura colombiana."
+        ],
+        correct: "a",
+        explanation: "Colombia tiene una rica herencia cultural y musical. Géneros como la cumbia y el vallenato han trascendido fronteras, siendo parte esencial de su identidad."
+    },
+    {
+        question: "¿Qué caracteriza el turismo en Colombia?",
+        options: [
+            "A) Colombia solo ofrece destinos urbanos sin mayor atractivo natural.",
+            "B) Destinos únicos y seguros, aunque es importante ser precavido en ciertas áreas.",
+            "C) Zonas inseguras sin opciones turísticas destacadas.",
+            "D) Turismo restringido a visitantes locales."
+        ],
+        correct: "b",
+        explanation: "Colombia ofrece destinos únicos y seguros como el Parque Nacional Tayrona, el Amazonas y la región cafetera."
+    },
+    {
+        question: "¿Qué sectores están impulsando el crecimiento económico de Colombia?",
+        options: [
+            "A) Únicamente el sector petrolero.",
+            "B) Tecnología y exportación de flores.",
+            "C) Agricultura tradicional.",
+            "D) Dependencia total del comercio internacional."
+        ],
+        correct: "b",
+        explanation: "Colombia ha diversificado su economía gracias a la tecnología y exportaciones como las flores."
+    },
+    {
+        question: "¿Qué refleja la realidad educativa en Colombia?",
+        options: [
+            "A) Universidades de alta calidad junto con desafíos en áreas rurales.",
+            "B) Falta de inversión significativa en educación.",
+            "C) Baja valoración social de la educación.",
+            "D) Infraestructura educativa limitada a ciudades principales."
+        ],
+        correct: "a",
+        explanation: "Colombia cuenta con universidades reconocidas internacionalmente, como la Universidad de los Andes."
+    },
+    {
+        question: "¿Cómo es el transporte público en las ciudades colombianas?",
+        options: [
+            "A) Todas las ciudades carecen de transporte público moderno.",
+            "B) Bogotá es la única ciudad con un sistema funcional.",
+            "C) Muchas ciudades tienen sistemas modernos, aunque hay desafíos en zonas rurales.",
+            "D) El transporte es predominantemente inseguro."
+        ],
+        correct: "c",
+        explanation: "Ciudades como Medellín cuentan con un sistema de metro eficiente, mientras Bogotá opera el TransMilenio."
+    },
+    {
+        question: "¿Qué caracteriza la industria de la moda en Colombia?",
+        options: [
+            "A) Productos de impacto local, sin reconocimiento internacional.",
+            "B) Moda sostenible y marcas emergentes reconocidas globalmente.",
+            "C) Textiles de baja calidad sin innovación.",
+            "D) Influencia limitada de tendencias locales."
+        ],
+        correct: "b",
+        explanation: "Colombia se destaca en moda sostenible y eventos como Colombiamoda, que generan millones en negocios internacionales."
+    },
+    {
+        question: "¿Cómo se describe la gastronomía colombiana?",
+        options: [
+            "A) Rica y variada, aunque persisten prejuicios sobre el país.",
+            "B) Limitada y poco conocida fuera del país.",
+            "C) Solo influenciada por tradiciones indígenas.",
+            "D) Sin impacto relevante en la escena internacional."
+        ],
+        correct: "a",
+        explanation: "La gastronomía colombiana incluye platos icónicos como la bandeja paisa y el ajiaco, reconocidos internacionalmente."
+    }
+];
+
+        let preguntaActual = 0;
+        let respuestasCorrectas = 0;
+        let mostrandoExplicacion = false;
+
+        function mostrarPregunta() {
+            const contenedor = document.getElementById("quiz-container");
+            contenedor.style.opacity = "0";
+
+            setTimeout(() => {
+                const pregunta = preguntas[preguntaActual];
+                let opcionesHTML = "";
+
+                pregunta.options.forEach((opcion, index) => {
+                    opcionesHTML += `
+                        <label>
+                            <input type="radio" name="opcion" value="${String.fromCharCode(97 + index)}">
+                            ${opcion}
+                        </label>
+                    `;
+                });
+
+                contenedor.innerHTML = `
+                    <div class="question">${pregunta.question}</div>
+                    <div class="options">${opcionesHTML}</div>
+                `;
+
+                document.getElementById("next-button").disabled = true;
+
+                const inputs = document.getElementsByName("opcion");
+                inputs.forEach(input => {
+                    input.addEventListener("change", () => {
+                        document.getElementById("next-button").disabled = false;
+                    });
+                });
+
+                contenedor.style.opacity = "1";
+            }, 500);
+        }
+
+        function manejarBoton() {
+            if (!mostrandoExplicacion) {
+                mostrarExplicacion();
+            } else {
+                pasarASiguientePregunta();
+            }
+        }
+
+        function mostrarExplicacion() {
+            const inputs = document.getElementsByName("opcion");
+            let seleccion = "";
+            inputs.forEach(input => {
+                if (input.checked) seleccion = input.value;
+            });
+
+            const contenedor = document.getElementById("result");
+            const pregunta = preguntas[preguntaActual];
+
+            if (seleccion === pregunta.correct) {
+                respuestasCorrectas++;
+                contenedor.textContent = "¡Correcto! " + pregunta.explanation;
+            } else {
+                contenedor.textContent = "Incorrecto. " + pregunta.explanation;
+            }
+
+            mostrandoExplicacion = true;
+        }
+
+        function pasarASiguientePregunta() {
+            mostrandoExplicacion = false;
+            preguntaActual++;
+
+            const contenedor = document.getElementById("result");
+            contenedor.textContent = "";
+
+            if (preguntaActual < preguntas.length) {
+                mostrarPregunta();
+            } else {
+                mostrarResultadoFinal();
+            }
+        }
+
+        function mostrarResultadoFinal() {
+            const contenedor = document.getElementById("quiz-container");
+            const boton = document.getElementById("next-button");
+            const mensajeFinal = document.getElementById("result");
+
+            boton.style.display = "none";
+
+            let mensaje = "";
+            if (respuestasCorrectas >= 7) {
+                mensaje = "¡Excelente! Casi no tienes prejuicios sobre Colombia. Sigue explorando y aprendiendo.";
+            } else if (respuestasCorrectas >= 4) {
+                mensaje = "¡Buen intento! Estás mejorando, pero todavía tienes prejuicios sobre Colombia.";
+            } else {
+                mensaje = "Eres muy prejuicioso. Parece que ves a Colombia mal. ¡Anímate a explorar más sobre Bogotá y el país!";
+            }
+
+            mensajeFinal.innerHTML = `
+                <p>¡Quiz finalizado!</p>
+                <p>Obtuviste <strong>${respuestasCorrectas} de ${preguntas.length}</strong> respuestas correctas.</p>
+                <p>${mensaje}</p>
+            `;
+        }
+
+        mostrarPregunta();
+
+    </script>
+</body>
+</html>
